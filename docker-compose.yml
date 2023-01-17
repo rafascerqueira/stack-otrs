@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  app:
+    image: rafascerqueira/otrs-app
+    container_name: otrs_app
+    ports:
+      - 80:80
+    volumes:
+      - ./znuny-6.0.48:/opt/otrs
+    depends_on:
+      - database
+    networks:
+      - otrs_net
+
+  database:
+    image: mariadb
+    container_name: otrs_db
+    restart: always
+    environment:
+      - MARIADB_USER=otrs
+      - MARIADB_PASSWORD=${DB_PASS}
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASS}
+    expose:
+      - 3306:3306
+    networks:
+      - otrs_net
+
+networks:
+  otrs_net:
