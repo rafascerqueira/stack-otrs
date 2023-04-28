@@ -1,7 +1,0 @@
-[client]
-max_allowed_packet=256M
-
-[mysqld]
-innodb_file_per_table
-innodb_log_file_size = 256M
-max_allowed_packet=256M

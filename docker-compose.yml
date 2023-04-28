@@ -1,30 +1,31 @@
 version: '3.9'
-
 services:
-  app:
-    image: rafascerqueira/otrs-app
-    container_name: otrs_app
+  znuny:
+    image: mgcred/znuny
+    container_name: znuny_app
+    volumes:
+      - ./skin/Agent:/opt/otrs/var/httpd/htdocs/skins/Agent/mgcred
+      - ./skin/Customer:/opt/otrs/var/httpd/htdocs/skins/Customer/mgcred
+      - ./skin/CustomSkin.xml:/opt/otrs/Kernel/Config/Files/CustomSkin.xml
+      - ./Template:/opt/otrs/Kernel/Output/HTML/Templates/MGCred
     ports:
       - 80:80
-    volumes:
-      - ./znuny-6.0.48:/opt/otrs
     depends_on:
       - database
     networks:
-      - otrs_net
+      - mgcred-srv
 
   database:
-    image: mariadb
-    container_name: otrs_db
-    restart: always
-    environment:
-      - MARIADB_USER=otrs
-      - MARIADB_PASSWORD=${DB_PASS}
-      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASS}
+    image: mgcred/znuny-mariadb
+    container_name: znuny_db
     expose:
       - 3306:3306
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
     networks:
-      - otrs_net
+      - mgcred-srv
+      
 
 networks:
-  otrs_net:
+  mgcred-srv:
