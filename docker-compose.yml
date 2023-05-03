@@ -9,7 +9,7 @@ services:
       - ./skin/CustomSkin.xml:/opt/otrs/Kernel/Config/Files/CustomSkin.xml
       - ./Template:/opt/otrs/Kernel/Output/HTML/Templates/MGCred
     ports:
-      - 80:80
+      - 8080:80
     depends_on:
       - database
     networks:
@@ -18,13 +18,24 @@ services:
   database:
     image: mgcred/znuny-mariadb
     container_name: znuny_db
-    expose:
+    ports:
       - 3306:3306
     environment:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - MARIADB_PASSWORD=${MARIADB_PASSWORD}
     networks:
       - mgcred-srv
+
+  dashboard:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3333:3000
+    depends_on:
+      - database
+    networks:
+      - mgcred-srv
+    
       
 
 networks:
